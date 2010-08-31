@@ -1,0 +1,25 @@
+#summary Compiling SWI-Prolog for the JPL Java API
+#labels Phase-Deploy
+
+= Introduction =
+
+The SWI-Prolog compiler needs to be recompiled (on most Linux distributions) for JPL to work, since JPL is not in the default-configuration and it needs libswipl compiled as a shared library.
+
+
+= Details =
+
+Get the source: http://www.swi-prolog.org/download/stable/src/pl-5.10.1.tar.gz
+
+Extract the tarball and edit build.templ as follows:
+Set PREFIX:
+ * PREFIX=/usr
+Select Packages:
+ * export DISABLE_PKGS="ssl odbc xpce"
+And create a shared library. Add:
+ * EXTRACFG+=" --enable-shared"
+
+Then run build.templ.
+
+Afterwards there should be a "jpl.jar" in /usr/lib/swipl-5.10.1/lib and libswipl.so in /usr/lib/swipl-5.10.1/lib/i686-linux
+
+For compilation of the java-sources the jpl.jar needs to be in the Classpath and java needs to be called as "java -Djava.library.path=.:/usr/lib/swipl-5.10.1/lib/i686-linux" (path to libswpl.so) 
