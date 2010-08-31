@@ -131,7 +131,6 @@ public class Sentence{
 	public static LinkedList<Sentence> convertSentences(String inString){
 		LinkedList<String> temp = convertDotNotation(inString);
 		LinkedList<Sentence> retVal = new LinkedList<Sentence>();
-		Sentence tmp;
 		for (String sentence : temp)
 			retVal.add(new Sentence(sentence));
 		return retVal;

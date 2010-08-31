@@ -1,6 +1,6 @@
 % set up the search path and namespace for the naproche modules
-user:file_search_path(naproche, 'input').
-user:file_search_path(naproche, 'lib').
+user:file_search_path(naproche, '../prolog/input').
+user:file_search_path(naproche, '../prolog/lib').
 
 % Naproche modules
 :- use_module(naproche(input_parser)).
