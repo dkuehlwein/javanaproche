@@ -1,0 +1,5 @@
+<!ELEMENT par ( #PCDATA ) >
+
+<!ELEMENT quote ( par+ ) >
+
+<!ELEMENT root ( par | quote )* >

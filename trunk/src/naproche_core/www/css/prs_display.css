@@ -1,0 +1,113 @@
+.clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.clearfix {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+
+body{
+  /*width: 1000em; 
+  padding-top: 2em;*/
+width: 1000em;
+padding-top: 0px;
+padding-left: 15px;
+color: #000000;
+background-color:#FFFFFF;
+}
+
+div#sentences{
+  margin-bottom: 2em;
+  color: #F00;
+}
+
+
+div.condition{
+  float: left;
+  }
+
+* div.condition{
+  clear: left;
+}
+
+div.prs{
+
+  float: left;
+  border: 1px solid #000;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+div#prs{
+ width: 300px;
+  background-color: #EE0000;
+}
+
+div.prs div.prs{
+  clear: left;
+  margin: .8em 0 1em 0;
+}
+
+div.connected div.connector + div.prs{
+  float: left;
+  clear: none;
+}
+
+div.not + div.prs{
+  float: left;
+  clear: none;
+}
+
+div.connector{
+  float: left;
+  clear: none;
+  font-size: 2em;
+  padding: 1.5em .7em 0 .7em;
+}
+
+div.function_symbol{
+  float: left;
+  clear: left;
+  font-size: 2em;
+  padding: 1.5em .7em 0 .7em;
+}
+
+div.not{
+  float: left;
+  clear: none;
+  font-size: 2em;
+  padding: 1.5em .7em 0 .7em;
+  color: red;
+}
+
+
+
+
+span.label{
+  position: relative;
+  padding: .1em .3em;
+  top: -.5em;
+  left: 0;
+  background: #FFF;
+  border: 1px solid #000;
+}
+
+dt{
+  clear: left;
+  width: 4em;
+  text-align: right;
+  float: left;
+  margin: 0 1em .3em 0;
+}
+
+dd{
+  float: left;
+  margin: 0 0 .3em 0;
+}
