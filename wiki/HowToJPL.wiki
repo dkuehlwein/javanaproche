@@ -23,3 +23,7 @@ Then run build.templ.
 Afterwards there should be a "jpl.jar" in /usr/lib/swipl-5.10.1/lib and libswipl.so in /usr/lib/swipl-5.10.1/lib/i686-linux
 
 For compilation of the java-sources the jpl.jar needs to be in the Classpath and java needs to be called as "java -Djava.library.path=.:/usr/lib/swipl-5.10.1/lib/i686-linux" (path to libswpl.so) 
+
+
+Tested on:
+ * Arch Linux, i686
