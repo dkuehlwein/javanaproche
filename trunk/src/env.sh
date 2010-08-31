@@ -1,11 +1,11 @@
 ################################################################
-# Setup the environment for compiling and running the demos on
-# Unix like platforms.  This script is sourced from the run.sh
-# scripts in the various example directories.
-# 
-# You may need to edit this before running the demos
-# 
-# Required setup
+# Setup the environment for compiling and running JPL-linked Java code.
+# Should never be called directly.
+# Is called by run_xxx.sh Scripts like run_Example.sh.
+#
+# TODO: Script seems quite bloated, may be shortened significantly.
+#
+# Required setup:
 # 
 # 	* The directory holding java and javac must be in $PATH
 # 	* JPL must be installed

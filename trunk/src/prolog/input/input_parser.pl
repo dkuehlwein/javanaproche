@@ -29,7 +29,7 @@ create_naproche_input(Atom,List) :-
 
 % Error case
 create_naproche_input(Atom,_) :-
-	add_error_message_once(inputError,create_naproche_input,Atom,'Could not parse input.'),
+	add_error_message_once(inputError,create_naproche_input,Atom,0,0,'Could not parse input.'),
 	!,
 	fail.
 
@@ -160,14 +160,14 @@ sentence([math(Content)|Out],InIndex,OutIndex,InWordlist,OutWordlist) -->
 
 sentence([_|Out],InIndex,OutIndex,InWordlist,OutWordlist) -->
 	['$'],
-	{NewInIndex is InIndex+1},
-	math_fail(Y,NewInIndex,NewNewInIndex),
+	{NewInIndex0 is InIndex+1},
+	math_fail(Y,NewInIndex0,NewInIndex1),
 	{
 	atom_concat('$',Y,X),
-	add_error_message_once(inputError,sentence,X,'Could not parse math mode.'),
+	add_error_message_once(inputError,sentence,X,InIndex,NewInIndex1,'Could not parse math mode.'),
 	!
 	},
-	sentence(Out,NewNewInIndex,OutIndex,InWordlist,OutWordlist),
+	sentence(Out,NewInIndex1,OutIndex,InWordlist,OutWordlist),
 	{ fail }.
 
 
@@ -182,7 +182,7 @@ sentence([],InIndex,OutIndex,Wordlist,Wordlist) -->
 sentence(_,InIndex,OutIndex,Wordlist,Wordlist) -->
 	([];[_]),
 	{OutIndex is InIndex +1},
-	{add_error_message_once(inputError,sentence,0,'No terminal symbol found.'),
+	{add_error_message_once(inputError,sentence,0,InIndex,OutIndex,'No terminal symbol found.'),
 	!,	
 	fail}.
 
@@ -367,7 +367,7 @@ input_math(Out,InIndex,OutIndex) -->
 	['\\'],
 	{NewInIndex is InIndex+1},
 	{
-	add_error_message_once(inputError,input_math,'abc','Missing Latex command.'),
+	add_error_message_once(inputError,input_math,'\\',InIndex,NewInIndex,'Missing Latex command.'),
 	!},
 	input_math(Out,NewInIndex,OutIndex),
 	{
@@ -422,10 +422,18 @@ math_fail(Out,InIndex,OutIndex) -->
 math_fail(Char,InIndex,OutIndex) -->
 	[Char],
 	{OutIndex is InIndex+1},
-	{add_error_message_once(inputError,math_fail,0,'Missing $.')}.
+	{add_error_message_once(inputError,math_fail,0,InIndex,OutIndex,'Missing $.')}.
 
 
 new_sentence_index(Index) :-
 	retract(sentence_index(Index)),
     	succ(Index, NewIndex),
       	assertz(sentence_index(NewIndex)).
+
+
+add_error_message_once(Type, Position, Subject, Start, End, Description) :-
+	atom_concat(', ',Start,Tmp),
+	atom_concat(Tmp,', ',Tmp2),
+	atom_concat(Tmp2,End,Tmp3),
+	atom_concat(Position, Tmp3, NewPosition),
+	add_error_message_once(Type, NewPosition, Subject, Description).
