@@ -5,7 +5,7 @@
 
 The SWI-Prolog compiler needs to be recompiled (on most Linux distributions) for JPL to work, since JPL is not in the default-configuration and it needs libswipl compiled as a shared library.
 
-However online documentation indicates that recompilation may be not necessary on AMD64/x86_64 platforms. Only compiling JPL may suffice.
+However: Online documentation indicates that recompilation may be not necessary on AMD64/x86_64 platforms. Only compiling JPL may suffice.
 
 
 = Steps =
