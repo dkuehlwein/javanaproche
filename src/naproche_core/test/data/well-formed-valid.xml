@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <par>The first paragraph.</par>
-  <quote>
-    <par>The second paragraph.</par>
-    <par>The third paragraph.</par>
-  </quote>
-  <par>The fourth paragraph.</par>
-</root>

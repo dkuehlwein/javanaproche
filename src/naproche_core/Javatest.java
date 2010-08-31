@@ -3,6 +3,8 @@ import java.util.LinkedList;
 import jpl.Query;
 import jpl.*;
 
+// Example: Calls create_naproche_input from Java and parses the returnvalue with convertSentences.
+
 public class Javatest{
 	public static void main(String args[]){
 		new Query("[load].").oneSolution();
