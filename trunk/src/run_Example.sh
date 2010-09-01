@@ -1,8 +1,6 @@
 #!/bin/sh
 
-cd java
-rm *.class # force recompilation
-. ../env.sh
+. ./env.sh
 
-run Example
+run preparser/Example
 
