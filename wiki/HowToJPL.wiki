@@ -27,7 +27,8 @@ Then run build.templ. (Despite setting SUDO in most cases the script needs to be
 
 Afterwards there should be a "jpl.jar" in /usr/lib/swipl-5.10.1/lib and libswipl.so in /usr/lib/swipl-5.10.1/lib/i686-linux
 
-For compilation of the java-sources the jpl.jar needs to be in the Classpath and java needs to be called as "java -Djava.library.path=.:/usr/lib/swipl-5.10.1/lib/i686-linux" (path to libswpl.so) 
+For compilation of the java-sources the jpl.jar needs to be in the Classpath and java needs to be called as "java -Djava.library.path=.:/usr/lib/swipl-5.10.1/lib/i686-linux" (path to libswpl.so)
+This is most easily done by using the provided "env.sh" script, called by the various run.sh scripts. When using an IDE (like Eclipse) manual work is required to set the variables (see below).
 
 Please note: While this will (probably) not overwrite any SWI-Prolog packages which were installed via package management, it will replace the symbolic links to swipl, swipl-ld and swipl-rc in /usr/bin.
 
@@ -40,6 +41,9 @@ Tested on:
 Most erros when using JPL are caused by incorrectly set Classpath and java.library.path variables.
 
 "java: symbol lookup error: libjpl.so: undefined symbol: PL_is_initialised" indicates that the java.library.path does not point to libswipl.
+
+When using Eclipse you need to explicitly reference the jpl.jar. Also the "native library location" (the path to libswipl.so) must be known to Eclipse. This can be done as follows:
+Right-click on your project, select Properties -> Java Build Path -> Libraries. Expand the "jpl.jar"-entry, select "native library location" and give it the path to libswipl.so (most likely "/usr/lib/swipl-5.10.1/lib/i686-linux")
 
 = Links =
 http://comments.gmane.org/gmane.comp.ai.prolog.swi/12597
