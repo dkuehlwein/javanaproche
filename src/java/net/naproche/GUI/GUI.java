@@ -1,3 +1,4 @@
+package net.naproche.GUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +9,10 @@ import java.awt.Rectangle;
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import javax.swing.JScrollBar;
+
+import net.naproche.preparser.*;
+import net.naproche.preparser.Error;
+
 import java.awt.Dimension;
 import java.awt.Button;
 import java.awt.TextArea;
