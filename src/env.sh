@@ -3,8 +3,6 @@
 # Should never be called directly.
 # Is called by run_xxx.sh Scripts like run_Example.sh.
 #
-# TODO: Script seems quite bloated, may be shortened significantly.
-#
 # Required setup:
 # 
 # 	* The directory holding java and javac must be in $PATH
@@ -60,35 +58,25 @@ fi
 
 eval `$PL -dump-runtime-variables`
 
-PLLIBDIR="$PLBASE/lib/$PLARCH"
-if [ -z "$JPLJAR" ]; then
-  JPLJAR="$PLBASE/lib/jpl.jar"
-fi
+JPLJAR="java/lib/jpl.jar"
+# JPLJAR="$PLBASE/lib/jpl.jar"
 
+PLLIBDIR="$PLBASE/lib/$PLARCH"
 if [ -z "$LD_LIBRARY_PATH" ]; then
    LD_LIBRARY_PATH="$PLLIBDIR";
 else
    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PLLIBDIR"
 fi
 
-if [ -z "$CLASSPATH" ]; then
-   CLASSPATH=".:$JPLJAR";
-else
-   CLASSPATH=".:$JPLJAR:$CLASSPATH"
-fi
+   CLASSPATH="$CLASSPATH:$JPLJAR"
 
 export LD_LIBRARY_PATH CLASSPATH
+echo $CLASSPATH
+echo $LD_LIBRARY_PATH
 
-################################################################
-# compile Class
-#
-# Compile the indicated class if necessary
-################################################################
-
-compile()
-{   echo "Compiling $1"
-    javac *.java
-}
+echo "Compiling Javanaproche"
+javac java/net/naproche/GUI/*.java -d .
+javac java/net/naproche/preparser/*.java -d .
 
 
 ################################################################
@@ -102,41 +90,7 @@ compile()
 ################################################################
 
 run()
-{ compile $1
-
-  if [ "$JPL_COMPILE_ONLY" != "yes" ]; then
-    echo ""
-    echo "JPL demo: $1"
-    echo ""
-
-    java -Djava.library.path=.:$PLLIBDIR $1
-  fi
+{
+   echo "Javanaproche Module: $1"
+   java -Djava.library.path=.:$PLLIBDIR net/naproche/$1
 }
-
-################################################################
-# run_preloaded Class
-# 
-# As run Class, but preloads libjpl.so to be able to use foreign
-# extensions to Prolog.  See the SemWeb example
-#
-# This isn't needed for installations using SWI-Prolog through
-# the libpl.$PLSOEXT shared object.  For the moment this is only
-# MacOS, which ignores LD_PRELOAD, so we'll ignore this issue for
-# the moment
-################################################################
-
-run_preloaded()
-{ compile $1
-
-  if [ "$JPL_COMPILE_ONLY" != "yes" ]; then
-    JPLSO="$PLBASE/lib/$PLARCH/libjpl.$PLSOEXT"
-
-    echo ""
-    echo "JPL demo: $1"
-    echo "Using preloaded $JPLSO"
-    echo ""
-
-  
-    env LD_PRELOAD=$JPLSO java -Djava.library.path=.:$PLLIBDIR $1
-  fi
-} 
