@@ -71,8 +71,6 @@ fi
    CLASSPATH="$CLASSPATH:$JPLJAR"
 
 export LD_LIBRARY_PATH CLASSPATH
-echo $CLASSPATH
-echo $LD_LIBRARY_PATH
 
 echo "Compiling Javanaproche"
 javac java/net/naproche/GUI/*.java -d .

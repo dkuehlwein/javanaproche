@@ -8,7 +8,7 @@ import jpl.*;
 
 public class Example{
 	public static void main(String args[]){
-		new Query("['src/prolog/load_jpl'].").oneSolution();
+		new Query("['prolog/load_jpl'].").oneSolution();
 		Query create_naproche_input =
 			// new Query("create_naproche_input('Let $n$ be in $\\\\mathbb{N}$. Then $n > 0$.',L).");
 			// new Query("create_naproche_input('\\\\begin{Proof} trivial. \\\\end{Proof}',L).");
