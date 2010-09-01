@@ -1,3 +1,4 @@
+package net.naproche.GUI;
 
 import javax.swing.*;
 import java.awt.*;

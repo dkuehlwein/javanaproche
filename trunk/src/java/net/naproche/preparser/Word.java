@@ -1,3 +1,4 @@
+package net.naproche.preparser;
 import java.util.LinkedList;
 
 //Containerclass for one word
