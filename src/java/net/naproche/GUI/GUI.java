@@ -1,4 +1,3 @@
-package net.naproche.GUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +12,8 @@ import java.awt.Dimension;
 import java.awt.Button;
 import java.awt.TextArea;
 
+import jpl.*;
+import java.awt.Label;
 
 public class GUI extends JPanel {
 
@@ -21,7 +22,7 @@ public class GUI extends JPanel {
 	private TextArea textArea = null;
 	private Button open = null;
 	private Button save = null;
-
+	private TextArea info = null;
 	/**
 	 * This method initializes 
 	 * 
@@ -37,13 +38,14 @@ public class GUI extends JPanel {
 	 */
 	private void initialize() {
         this.setLayout(null);
-        this.setSize(new Dimension(781, 427));
+        this.setVisible(true);
+        this.setSize(new Dimension(800, 600));
         this.add(getButtonCheck(), null);
         this.add(getButtonExit(), null);
         this.add(getTextArea(), null);
         this.add(getButtonOpen(), null);
         this.add(getButtonSave(), null);
-        this.setVisible(true);			
+        this.add(getInfo(), null);
 	}
 
 	/**
@@ -54,8 +56,23 @@ public class GUI extends JPanel {
 	private Button getButtonCheck() {
 		if (check == null) {
 			check = new Button();
-			check.setBounds(new Rectangle(45, 383, 125, 30));
+			check.setBounds(new Rectangle(20, 550, 125, 30));
 			check.setLabel("Check");
+			check.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					String tmp = textArea.getText();
+					tmp = tmp.replaceAll("\\n", "!");
+					//System.out.println("TMP:" + tmp);
+					tmp = tmp.replaceAll("\\\\", "#");
+					//System.out.println("TMP:" + tmp);
+					tmp = tmp.replaceAll("#", "\\\\\\\\");
+					
+					info.setVisible(true);
+					//info.setText("OK!");
+					preparse(tmp);
+					//info.setText(tmp);
+				}
+			});
 		}
 		return check;
 	}
@@ -68,7 +85,7 @@ public class GUI extends JPanel {
 	private Button getButtonExit() {
 		if (exit == null) {
 			exit = new Button();
-			exit.setBounds(new Rectangle(620, 379, 146, 38));
+			exit.setBounds(new Rectangle(650, 550, 125, 30));
 			exit.setLabel("Exit");
 			exit.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -87,8 +104,8 @@ public class GUI extends JPanel {
 	private TextArea getTextArea() {
 		if (textArea == null) {
 			textArea = new TextArea();
-			textArea.setBounds(new Rectangle(16, 42, 750, 308));
-			textArea.setText("%Try this example or insert your own text.");
+			textArea.setBounds(new Rectangle(20, 50, 750, 300));
+			textArea.setText("Try this example or insert your own text.");
 		}
 		return textArea;
 	}
@@ -101,7 +118,7 @@ public class GUI extends JPanel {
 	private Button getButtonOpen() {
 		if (open == null) {
 			open = new Button();
-			open.setBounds(new Rectangle(32, 7, 63, 22));
+			open.setBounds(new Rectangle(20, 5, 60, 30));
 			open.setLabel("Open");
 			open.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -120,7 +137,7 @@ public class GUI extends JPanel {
 	private Button getButtonSave() {
 		if (save == null) {
 			save = new Button();
-			save.setBounds(new Rectangle(131, 7, 60, 22));
+			save.setBounds(new Rectangle(100, 5, 60, 30));
 			save.setLabel("Save");
 			save.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -216,10 +233,49 @@ public class GUI extends JPanel {
 		}
 	}
 	
-	
+	public void preparse(String input){
+		new Query("['../prolog/load_jpl'].").oneSolution();
+		Query create_naproche_input =
+			// new Query("create_naproche_input('Let $n$ be in $\\\\mathbb{N}$. Then $n > 0$.',L).");
+			// new Query("create_naproche_input('\\\\begin{Proof} trivial. \\\\end{Proof}',L).");
+			new Query("create_naproche_input('" + input + 
+					"',L).");
+
+		String output;
+		try{
+			output = create_naproche_input.oneSolution().get("L").toString();
+			LinkedList<Sentence> ll = Sentence.convertSentences(output);
+			System.out.println("OK: " + ll);
+			info.setText(ll.toString());
+			info.setVisible(true);
+		}
+		catch (java.lang.NullPointerException ex){
+			Query get_messages = new Query("get_messages(Messages)");
+			output = get_messages.oneSolution().get("Messages").toString();
+			LinkedList<Error> ll = Error.convertErrors(output);
+			System.out.println("Nicht OK: " + ll);
+			info.setText(ll.toString());
+			info.setVisible(true);
+		}
+	}
 /*	
 	public static void main(String args[]){
 		GUI x = new GUI();
 	}
 */
+
+	/**
+	 * This method initializes info	
+	 * 	
+	 * @return java.awt.TextArea	
+	 */
+	private TextArea getInfo() {
+		if (info == null) {
+			info = new TextArea();
+			info.setBounds(new Rectangle(20, 360, 750, 180));
+			info.setVisible(false);
+			info.setEditable(false);
+		}
+		return info;
+	}
 }  //  @jve:decl-index=0:visual-constraint="26,33"
