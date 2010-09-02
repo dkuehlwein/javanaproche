@@ -41,8 +41,34 @@ create_naproche_input(Atom,_) :-
 %	@param In is a naproche readable list
 %	@param Out is a naproche readable list
 
+any_char(InIndex,OutIndex) -->
+	[Char],
+	{
+	\+ Char='#',
+	\+ char_type(Char, newline)
+	},
+	{NewInIndex is InIndex+1},
+	any_char(NewInIndex,OutIndex),
+	!.
+
+any_char(InIndex,OutIndex) -->
+	[Char],
+        {
+	\+ Char='#',
+	\+ char_type(Char, newline)
+        },
+	{OutIndex is InIndex+1}.
+
 input_dcg([],InIndex,InIndex) -->
 	[].
+
+% % indicates commentary. ignored:
+input_dcg(Out,InIndex,OutIndex) -->
+	['%'],
+	any_char(InIndex,NewInIndex),
+	['#'],
+	input_dcg(Out,NewInIndex,OutIndex).
+
 
 % All whitespace-characters are irrelevant, so they are ignored. However, they are indexed.
 input_dcg(Out,InIndex,OutIndex) -->
@@ -50,7 +76,8 @@ input_dcg(Out,InIndex,OutIndex) -->
 	{
 	char_type(Char, white);
 	char_type(Char, newline);
-	char_type(Char, end_of_line)
+	char_type(Char, end_of_line);
+	Char ='#'
 	},
 	!,
 	{NewInIndex is InIndex +1},
