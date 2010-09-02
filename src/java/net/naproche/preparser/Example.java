@@ -36,7 +36,7 @@ public class Example{
 			// new Query("create_naproche_input('Let $n$ be in $\\\\mathbb{N}$. Then $n > 0$.',L).");
 			// new Query("create_naproche_input('\\\\begin{Proof} trivial. \\\\end{Proof}',L).");
 			// new Query("create_naproche_input('test',L).");
-			new Query("create_naproche_input('test. $\\\\frac{a}{b}$.',L).");
+			new Query("create_naproche_input('Axiom.There is no $y$ such that $y \\\\in \\\\emptyset$.Define $x$ to be transitive if and only if for all $u$, $v$, if $u \\\\in v$ and $v \\\\in x$ then $u\\\\in x$.Define $x$ to be an ordinal if and only if $x$ is transitive and for all $y$, if $y \\\\in x$ then $y$ is transitive.Then $\\\\emptyset$ is an ordinal.',L).");
 
 		String output;
 		try{

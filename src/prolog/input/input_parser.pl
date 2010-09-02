@@ -135,13 +135,14 @@ sentence([Word|Out],InIndex,OutIndex,InWordlist,OutWordlist) -->
 % sentence(Out,NewInIndex,OutIndex,InWordlist,OutWordlist).
 
 % Skip commas
-sentence([Char|Out],InIndex,OutIndex,InWordlist,OutWordlist) -->
+sentence(Out,InIndex,OutIndex,InWordlist,OutWordlist) -->
 	[Char],
 	{
 	Char=',',
 	!,
 	NewInIndex is InIndex
 	},
+	{write('hier')},
 	sentence(Out,NewInIndex,OutIndex,InWordlist,OutWordlist).
 
 % Math Case
