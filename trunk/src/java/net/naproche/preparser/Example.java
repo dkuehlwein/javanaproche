@@ -35,7 +35,8 @@ public class Example{
 		Query create_naproche_input =
 			// new Query("create_naproche_input('Let $n$ be in $\\\\mathbb{N}$. Then $n > 0$.',L).");
 			// new Query("create_naproche_input('\\\\begin{Proof} trivial. \\\\end{Proof}',L).");
-			new Query("create_naproche_input('test',L).");
+			// new Query("create_naproche_input('test',L).");
+			new Query("create_naproche_input('test. $\\\\frac{a}{b}$.',L).");
 
 		String output;
 		try{

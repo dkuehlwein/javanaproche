@@ -16,10 +16,27 @@ public class Sentence{
 		int pairs=0,posStart=0,conStart=0;
 
 		// "pairs" is the number of open parentheses with no corresponding closing one.
+
+		// parentheses are not to be counted if they are atoms themselfes
+		// therefore they need not to be surrounded by '
+		// but if they are it could be a construct like '.'('atom'
+		// so this case is excluded
 		for (int i=0; i<inString.length(); i++){
-			if 	(inString.substring(i,i+1).equals("(")	)
+			if 	(inString.substring(i,i+1).equals("(")
+			 	&& !(	inString.substring(i+1,i+2).equals("'")
+					&&	inString.substring(i-1,i).equals("'")
+					&&	!inString.substring(i-2,i-1).equals(".")
+					&&	inString.substring(i-3,i-2).equals("'")
+					)
+				)
 				pairs++;
-			else if	(inString.substring(i,i+1).equals(")")	)
+			else if	(inString.substring(i,i+1).equals(")")
+			 	&& !(	inString.substring(i-1,i).equals("'")
+					&&	inString.substring(i+1,i+2).equals("'")
+					&&	!inString.substring(i-2,i-1).equals(".")
+					&&	inString.substring(i-3,i-2).equals("'")
+					)
+				)
 				pairs--;
 			// A list is found (starts with '.'), the only open parenthesis is the one in "sentence(" and the position of the List containing the wordpositions is not found yet. -> The list containing the wordpositions is found.
 			else if(inString.substring(i,i+1).equals(".")	&&
@@ -109,11 +126,33 @@ public class Sentence{
 		}
 		// comma on parentheses-level 1 indicates a new member of the list.
 		for (int i = 0; i<l; i++){
-			if (inString.substring(i,i+1).equals( "(" ))
+			// parentheses are not to be counted if they are atoms themselfes
+			// therefore they need not to be surrounded by '
+			// but if they are it could be a construct like '.'('atom'
+			// so this case is excluded
+			if (inString.substring(i,i+1).equals( "(" )
+			 	&& !(	inString.substring(i+1,i+2).equals("'")
+					&&	inString.substring(i-1,i).equals("'")
+					&&	!inString.substring(i-2,i-1).equals(".")
+					&&	inString.substring(i-3,i-2).equals("'")
+					)
+				)
 					pairs++;
-			else if (inString.substring(i,i+1).equals( ")" ))
+			else if (inString.substring(i,i+1).equals( ")" )
+			 	&& !(	inString.substring(i-1,i).equals("'")
+					&&	inString.substring(i+1,i+2).equals("'")
+					&&	!inString.substring(i-2,i-1).equals(".")
+					&&	inString.substring(i-3,i-2).equals("'")
+					)
+				)
 					pairs--;
+			// ',' could be an atom, so this case is excluded.
+			// Also commas which seperate members always have a following space
 			else if (inString.substring(i,i+1).equals( "," )
+			 	&& !(	inString.substring(i-1,i).equals("'")
+					&&	inString.substring(i+1,i+2).equals("'")
+					)
+				&&	inString.substring(i+1,i+2).equals(" ")
 				&& pairs == 1){
 					j = i+2;
 					break;

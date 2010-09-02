@@ -58,7 +58,7 @@ fi
 
 eval `$PL -dump-runtime-variables`
 
-JPLJAR="java/lib/jpl.jar"
+JPLJAR="src/java/lib/jpl.jar"
 # JPLJAR="$PLBASE/lib/jpl.jar"
 
 PLLIBDIR="$PLBASE/lib/$PLARCH"
@@ -70,25 +70,4 @@ fi
 
    CLASSPATH="$CLASSPATH:$JPLJAR"
 
-export LD_LIBRARY_PATH CLASSPATH
-
-echo "Compiling Javanaproche"
-javac java/net/naproche/GUI/*.java -d .
-javac java/net/naproche/preparser/*.java -d .
-
-
-################################################################
-# run Class
-# 
-# Compiles Class if the .class file does not exsist and runs it
-# Note that some systems (Linux, ...) find the libjpl.xxx from
-# LD_LIBRARY_PATH.  MacOS finds this only when named libjpl.jnilib
-# and using -Djava.library.path=<Path>.  We pass both, hoping to
-# satisfy most systems ...
-################################################################
-
-run()
-{
-   echo "Javanaproche Module: $1"
-   java -Djava.library.path=.:$PLLIBDIR net/naproche/$1
-}
+export LD_LIBRARY_PATH CLASSPATH PLLIBDIR
