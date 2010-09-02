@@ -19,6 +19,8 @@ import java.awt.TextArea;
 
 import jpl.*;
 import java.awt.Label;
+import java.awt.TextField;
+import java.lang.Integer;
 
 public class GUI extends JPanel {
 
@@ -28,6 +30,9 @@ public class GUI extends JPanel {
 	private Button open = null;
 	private Button save = null;
 	private TextArea info = null;
+	private TextField txtstart = null;
+	private TextField txtend = null;
+	private Button btnmark = null;
 	
 	public GUI() {
 		super();
@@ -48,6 +53,9 @@ public class GUI extends JPanel {
         this.add(getButtonOpen(), null);
         this.add(getButtonSave(), null);
         this.add(getInfo(), null);
+        this.add(getTxtstart(), null);
+        this.add(getTxtend(), null);
+        this.add(getBtnmark(), null);
 	}
 
 	/**
@@ -65,9 +73,9 @@ public class GUI extends JPanel {
 					String tmp = textArea.getText();
 					tmp = tmp.replaceAll("\\n", "#");// TBC???
 					//System.out.println("TMP:" + tmp);
-					tmp = tmp.replaceAll("\\\\", "#");
+					tmp = tmp.replaceAll("\\\\", "!");
 					//System.out.println("TMP:" + tmp);
-					tmp = tmp.replaceAll("#", "\\\\\\\\");
+					tmp = tmp.replaceAll("!", "\\\\\\\\");
 					
 					info.setVisible(true);
 					//info.setText("OK!");
@@ -282,6 +290,66 @@ public class GUI extends JPanel {
 		}
 		return info;
 	}
+
+	/**
+	 * This method initializes txtstart	
+	 * 	
+	 * @return java.awt.TextField	
+	 */
+	private TextField getTxtstart() {
+		if (txtstart == null) {
+			txtstart = new TextField();
+			txtstart.setBounds(new Rectangle(400, 10, 50, 20));
+			txtstart.setText("0");
+		}
+		return txtstart;
+	}
+
+	/**
+	 * This method initializes txtend	
+	 * 	
+	 * @return java.awt.TextField	
+	 */
+	private TextField getTxtend() {
+		if (txtend == null) {
+			txtend = new TextField();
+			txtend.setBounds(new Rectangle(480, 10, 50, 20));
+			txtend.setText("1");
+		}
+		return txtend;
+	}
+
+	/**
+	 * This method initializes btnmark	
+	 * 	
+	 * @return java.awt.Button	
+	 */
+	private Button getBtnmark() {
+		if (btnmark == null) {
+			btnmark = new Button();
+			btnmark.setBounds(new Rectangle(550, 10, 100, 20));
+			btnmark.setLabel("Markierung");
+			btnmark.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					mark();
+					
+				}
+			});
+		}
+		return btnmark;
+	}
+	
+	public void mark(){
+		int start, end;
+		start = Integer.valueOf(txtstart.getText()).intValue();
+		end = Integer.valueOf(txtend.getText()).intValue();
+		
+		info.setVisible(true);
+		info.setText("Markierung sollte da sein");
+		textArea.select(start, end);
+		textArea.setFocusable(true);
+		
+	}
 	
 	/*	
 	public static void main(String args[]){
@@ -289,4 +357,4 @@ public class GUI extends JPanel {
 	}
 	*/
 	
-}  //  @jve:decl-index=0:visual-constraint="26,33"
+}  //  @jve:decl-index=0:visual-constraint="57,35"
