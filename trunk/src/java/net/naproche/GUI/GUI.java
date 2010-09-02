@@ -28,10 +28,7 @@ public class GUI extends JPanel {
 	private Button open = null;
 	private Button save = null;
 	private TextArea info = null;
-	/**
-	 * This method initializes 
-	 * 
-	 */
+	
 	public GUI() {
 		super();
 		initialize();
@@ -66,7 +63,7 @@ public class GUI extends JPanel {
 			check.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String tmp = textArea.getText();
-					tmp = tmp.replaceAll("\\n", "!");
+					tmp = tmp.replaceAll("\\n", "#");// TBC???
 					//System.out.println("TMP:" + tmp);
 					tmp = tmp.replaceAll("\\\\", "#");
 					//System.out.println("TMP:" + tmp);
@@ -74,7 +71,12 @@ public class GUI extends JPanel {
 					
 					info.setVisible(true);
 					//info.setText("OK!");
-					preparse(tmp);
+					try {
+						preparse(tmp);
+					}
+					catch(Exception ex){
+						info.setText("Es ist etwas schiefgegangen:\n" + ex.toString());
+					}
 					//info.setText(tmp);
 				}
 			});
@@ -110,7 +112,8 @@ public class GUI extends JPanel {
 		if (textArea == null) {
 			textArea = new TextArea();
 			textArea.setBounds(new Rectangle(20, 50, 750, 300));
-			textArea.setText("Try this example or insert your own text.");
+			//textArea.setText("Try this example or insert your own text. $\\frac{1}{2} = a$.");
+			textArea.setText("$\\frac{1}{2} = a$.");
 		}
 		return textArea;
 	}
@@ -154,6 +157,7 @@ public class GUI extends JPanel {
 	}
 	
 	protected void load() {
+		
 	    final JFileChooser fc = new JFileChooser();
 	    //int returnVal = fc.showOpenDialog(jFrame);
 	    int returnVal = fc.showOpenDialog(this.getComponent(0));
@@ -239,7 +243,7 @@ public class GUI extends JPanel {
 	}
 	
 	public void preparse(String input){
-		new Query("['../prolog/load_jpl'].").oneSolution();
+		new Query("['src/prolog/load_jpl'].").oneSolution();
 		Query create_naproche_input =
 			// new Query("create_naproche_input('Let $n$ be in $\\\\mathbb{N}$. Then $n > 0$.',L).");
 			// new Query("create_naproche_input('\\\\begin{Proof} trivial. \\\\end{Proof}',L).");
@@ -263,11 +267,6 @@ public class GUI extends JPanel {
 			info.setVisible(true);
 		}
 	}
-/*	
-	public static void main(String args[]){
-		GUI x = new GUI();
-	}
-*/
 
 	/**
 	 * This method initializes info	
@@ -283,4 +282,11 @@ public class GUI extends JPanel {
 		}
 		return info;
 	}
+	
+	/*	
+	public static void main(String args[]){
+		GUI x = new GUI();
+	}
+	*/
+	
 }  //  @jve:decl-index=0:visual-constraint="26,33"
