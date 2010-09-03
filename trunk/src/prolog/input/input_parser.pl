@@ -140,7 +140,8 @@ sentence(Out,InIndex,OutIndex,InWordlist,OutWordlist) -->
 	{
 	char_type(Char, white);
 	char_type(Char, newline);
-	char_type(Char, end_of_line)
+	char_type(Char, end_of_line);
+	Char ='#'
 	},
 	!,
 	{NewInIndex is InIndex+1},
@@ -302,7 +303,8 @@ input_math(Out,InIndex,OutIndex) -->
        {
        	char_type(Math,white);
        	char_type(Math,newline);
-	char_type(Math,end_of_line)       
+	char_type(Math,end_of_line);
+	Char ='#'
        },
        !,
        {NewInIndex is InIndex +1},
