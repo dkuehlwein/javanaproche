@@ -36,7 +36,7 @@ public class Error{
 		this.position = split[0].trim().substring(1);
 		this.start = Integer.valueOf(split[1].trim());
 		this.end = Integer.valueOf(split[2].substring(0,split[2].length()-1).trim());
-		this.content = arr[3].trim().substring(1,arr[3].trim().length()-1);
+		this.content = arr[3].trim();
 		this.description = arr[4].trim().substring(1,arr[4].trim().length()-2);
 	}
 
