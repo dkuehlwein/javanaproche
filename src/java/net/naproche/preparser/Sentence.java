@@ -59,6 +59,12 @@ public class Sentence{
 				}
 		}
 
+		// empty sentence case.
+		if(posStart==0 || conStart==0){
+			posStart = inString.split("\\[\\]")[0].length(); // number of characters until [] (position list)
+			conStart = inString.split("\\[\\]")[1].length()+posStart+2; // "[]" is not incluced in split, so add 2
+		}
+
 		// first 9 characters are "sentence(", following are id, start and end, seperated by ,.
 		String[] idStartEnd = inString.substring(9,posStart).split(",");
 
