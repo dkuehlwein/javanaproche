@@ -170,7 +170,6 @@ sentence(Out,InIndex,OutIndex,InWordlist,OutWordlist) -->
 	!,
 	NewInIndex is InIndex
 	},
-	{write('hier')},
 	sentence(Out,NewInIndex,OutIndex,InWordlist,OutWordlist).
 
 % Math Case
