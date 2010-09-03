@@ -20,9 +20,9 @@ public class Error{
 		this.type = split[0].trim();
 		this.position = split[1].trim().substring(1).trim();
 		this.start = Integer.valueOf(split[2].trim());
-		this.end = Integer.valueOf(split[3].trim().substring(0,split[2].length()-1).trim());
+		this.end = Integer.valueOf(split[3].trim().substring(0,split[3].trim().length()-1).trim());
 		this.content = split[4].trim();
-		this.description = split[5].trim().substring(1,split[5].length()-3);
+		this.description = split[5].trim().substring(1,split[5].trim().length()-3);
 	// Note: Minimal changes in how add_error_message_once forms the String may cause this parsing to malfunction, since it relies partially on absolute indices. Also a "," in any field would break it.
 	}
 
