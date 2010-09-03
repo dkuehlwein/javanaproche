@@ -18,6 +18,8 @@
 
 
 create_naproche_input(Atom,List) :-
+	%rest the error messages
+	clear_messages.
 	%reset the sentence-index
 	retractall(sentence_index(_)),
 	assertz(sentence_index(1)),
