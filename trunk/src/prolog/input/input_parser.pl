@@ -314,8 +314,10 @@ input_math(Out,InIndex,OutIndex) -->
 
 
 input_math([Math|Out],InIndex,OutIndex) -->
-       alnum(Math,InIndex,NewInIndex),
-       input_math(Out,NewInIndex,OutIndex).
+	[Math],
+	{char_type(Math, alnum),
+	NewInIndex is InIndex+1},
+	input_math(Out,NewInIndex,OutIndex).
 
 
 input_math([Char|Out],InIndex,OutIndex) -->
