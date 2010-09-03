@@ -35,6 +35,26 @@ create_naproche_input(Atom,_) :-
 	!,
 	fail.
 
+%%	no_linebreak(+InIndex, -OutIndex, +DCG_in:List, -DCG_out:List)
+%	Evaluates to true on any character except for # and newline and counts any passed character
+no_linebreak(InIndex,OutIndex) -->
+	[Char],
+	{
+	\+ Char='#',
+	\+ char_type(Char, newline)
+	},
+	{NewInIndex is InIndex+1},
+	no_linebreak(NewInIndex,OutIndex),
+	!.
+
+no_linebreak(InIndex,OutIndex) -->
+	[Char],
+        {
+	\+ Char='#',
+	\+ char_type(Char, newline)
+        },
+	{OutIndex is InIndex+1}.
+
 %%	input_dcg(Out:List)
 %
 %	Takes a list of characters and creates a naproche readable ist, e.g. of the form 
@@ -43,37 +63,37 @@ create_naproche_input(Atom,_) :-
 %	@param In is a naproche readable list
 %	@param Out is a naproche readable list
 
-any_char(InIndex,OutIndex) -->
-	[Char],
-	{
-	\+ Char='#',
-	\+ char_type(Char, newline)
-	},
-	{NewInIndex is InIndex+1},
-	any_char(NewInIndex,OutIndex),
-	!.
-
-any_char(InIndex,OutIndex) -->
-	[Char],
-        {
-	\+ Char='#',
-	\+ char_type(Char, newline)
-        },
-	{OutIndex is InIndex+1}.
 
 input_dcg([],InIndex,InIndex) -->
 	[].
 
-% % indicates commentary. ignored:
+% indicates commentary. ignored:
 input_dcg(Out,InIndex,OutIndex) -->
 	['%'],
-	any_char(InIndex,NewInIndex),
-	['#'],
+	no_linebreak(InIndex,NewInIndex),
+	[Char],
+	{Char='#';
+	 char_type(Char, newline)
+	},
 	!,
 	input_dcg(Out,NewInIndex,OutIndex).
 
+% special case: double-linebreak (new paragraph)
+input_dcg([sentence(Index,InIndex,NewInIndex,Wordlist,Content)|Out],InIndex,OutIndex) -->
+	[Char,Char],
+	{Char='#';
+	 Char='\\';
+	 char_type(Char, newline)
+	},
+	{new_sentence_index(Index),
+	 NewInIndex is InIndex+2,
+	 Wordlist=[word(InIndex,NewInIndex)],
+	 Content=['##']
+	},
+	!,
+	input_dcg(Out,NewInIndex,OutIndex).
 
-% All whitespace-characters are irrelevant, so they are ignored. However, they are indexed.
+% All whitespace-characters are irrelevant (including single-linebreak), so they are ignored. However, they are indexed.
 input_dcg(Out,InIndex,OutIndex) -->
 	[Char],
 	{
@@ -85,6 +105,7 @@ input_dcg(Out,InIndex,OutIndex) -->
 	!,
 	{NewInIndex is InIndex +1},
 	input_dcg(Out,NewInIndex,OutIndex).	
+
 
 % Environments (\begin / \end)
 input_dcg([sentence(Index,InIndex,NewInIndex2,Wordlist,Content)|Out],InIndex,OutIndex) -->
@@ -113,13 +134,7 @@ input_dcg([sentence(Index,InIndex,NewInIndex2,Wordlist,Content)|Out],InIndex,Out
 	input_dcg(Out,NewInIndex2,OutIndex).
 
 
-% Allow "\\" everywhere in the file, not only in sentences
-% input_dcg(Out,InIndex,OutIndex) -->
-% [\,\,\,\],
-% !,
-% {NewInIndex is InIndex +1},
-% input_dcg(Out,NewInIndex,OutIndex).	
-
+% sentence case
 input_dcg([sentence(Index,InIndex,NewInIndex,Wordlist,Content)|Out],InIndex,OutIndex) -->
 {
 	new_sentence_index(Index)
@@ -128,16 +143,17 @@ input_dcg([sentence(Index,InIndex,NewInIndex,Wordlist,Content)|Out],InIndex,OutI
 	!,
 	input_dcg(Out,NewInIndex,OutIndex).
 
-%%	sentence(-Out:List)
+%%	sentence(-Out:List, +InIndex, -OutIndex, +InWordlist:List, -OutWordlist:List)
 %
 %	Parses the input until the next '.' or ':', 
 %	concats characters to words.
+%	Counts indices of starting and ending characters the whole sentence and each word. 
+%	Saves start end end of words in Wordlist
 %
 %	@param In list of words parsed so far
 %	@param Out complete sentence.
 
 % White Space Case
-
 sentence(Out,InIndex,OutIndex,InWordlist,OutWordlist) -->
 	[Char],
 	{
@@ -158,15 +174,8 @@ sentence([Word|Out],InIndex,OutIndex,InWordlist,OutWordlist) -->
 	%append indices of found word to the incoming Wordlist and continue with the result.
 	sentence(Out,NewInIndex,OutIndex,NewOutWordlist,OutWordlist).
 
-% Skip \\
-% sentence(Out,InIndex,OutIndex,InWordlist,OutWordlist) -->
-% [\,\,\,\],
-% !,
-% {NewInIndex is InIndex+2},
-% sentence(Out,NewInIndex,OutIndex,InWordlist,OutWordlist).
-
 % Skip commas
-sentence(Out,InIndex,OutIndex,InWordlist,OutWordlist) -->
+sentence([Char|Out],InIndex,OutIndex,InWordlist,OutWordlist) -->
 	[Char],
 	{
 	Char=',',
@@ -219,9 +228,10 @@ sentence(_,InIndex,OutIndex,Wordlist,Wordlist) -->
 
 
 
-%%	word(-Out:List)
+%%	word(-Out:List,+InIndex,-OutIndex)
 %
 %	parses a word till the next whitespace character.
+%	Generates indices of first and last character.
 
 %To allow i.e. and e.g. constructions
 word('i.e.',InIndex,OutIndex) -->
@@ -254,9 +264,10 @@ word(Out,InIndex,OutIndex) -->
 	}.
 
 
-%%      lalnum(-Out:atom)
+%%      lalnum(-Out:atom,+InIndex,-OutIndex)
 %
-%       parses a latex-command (word starting with \)
+%       parses a latex-command (alnum starting with \)
+%       Counts characters.
 
 lalnum(Out,InIndex,OutIndex) -->
        [Char],
@@ -272,9 +283,10 @@ lalnum(Out,InIndex,OutIndex) -->
 
 
 
-%%	input_math(-Out:List)
+%%	input_math(-Out:List,+InIndex,-OutIndex, +DCG_in:List, -DCG_out:List)
 %
-%	parsed until the next $
+%	parses until the next $
+%	generates indices of first and last character of the whole math-input clause
 
 input_math([Math|Out],InIndex,OutIndex) -->
        [Math],
@@ -290,15 +302,6 @@ input_math([Math|Out],InIndex,OutIndex) -->
        },
        {NewInIndex is InIndex +1},
        input_math(Out,NewInIndex,OutIndex).
-
-% input_math([succ|Out]) -->
-% 	[\],
-% 	[Math],
-% 	{
-% 	atom_codes(Math,[39]),
-% 	!
-% 	},
-% 	input_math(Out).
 
 input_math(Out,InIndex,OutIndex) -->
        [Math],
@@ -412,9 +415,10 @@ input_math([],InIndex,InIndex) -->
        [].
 
 
-%%      alnum(-Out:atom)
+%%      alnum(-Out:atom, +InIndex, -OutIndex)
 %
-%       parses a word
+%       parses a word (containing alphanumeric characters)
+%       generates indices of first and last charaters
 
 alnum(Out,InIndex,OutIndex) -->
        [Char],
@@ -437,9 +441,10 @@ alnum(Char,InIndex,OutIndex) -->
 	{OutIndex is InIndex+1}.
 
 
-%%	math_fail(-Out:atom)
+%%	math_fail(-Out:atom,+InIndex,-OutIndex)
 %	
 %	returns code from $ to the next $ if math_input fails
+%	returns indices of the characters directly after the first $ and directly before the last $
 
 math_fail('$',InIndex,OutIndex) -->
 	[$],
@@ -458,13 +463,18 @@ math_fail(Char,InIndex,OutIndex) -->
 	{OutIndex is InIndex+1},
 	{add_error_message_once(inputError,math_fail,0,InIndex,OutIndex,'Missing $.')}.
 
-
+%%	new_sentence_index(-Index)
+%
+%	Generates new sentence Index (sentences are enumerated)
 new_sentence_index(Index) :-
 	retract(sentence_index(Index)),
     	succ(Index, NewIndex),
       	assertz(sentence_index(NewIndex)).
 
-
+%%	add_error_message_once(+Type, +Position, +Subject, +Start, +End, +Description)
+%
+%	Appends new error message with position being a comma-seperated set containing three elements
+%	intended for the syntactical position ("Position", e.g. "sentence") and two absolute indices ("Start" and "End")
 add_error_message_once(Type, Position, Subject, Start, End, Description) :-
 	atom_concat(', ',Start,Tmp),
 	atom_concat(Tmp,', ',Tmp2),
