@@ -13,17 +13,31 @@ public class Error{
 	String description;
 
 	public Error(String inString){
-		// Strip "message(error, " and split on ,:
-		String[] split = inString.substring(15).split(",");
+		String[] arr = new String[5], split = new String[3];
+		int arr_index=0, str_index=0, pairs=0;
 
-		// trim everything (lazy..) and cut of various irrelevant characters (like ' or ,) with substring.
-		this.type = split[0].trim();
-		this.position = split[1].trim().substring(1).trim();
-		this.start = Integer.valueOf(split[2].trim());
-		this.end = Integer.valueOf(split[3].trim().substring(0,split[3].trim().length()-1).trim());
-		this.content = split[4].trim();
-		this.description = split[5].trim().substring(1,split[5].trim().length()-3);
-	// Note: Minimal changes in how add_error_message_once forms the String may cause this parsing to malfunction, since it relies partially on absolute indices. Also a "," in any field would break it.
+		for (int i=0; i<inString.length(); i++){
+			if (inString.substring(i,i+1).equals("'") && pairs==0)
+				pairs++;
+			else if (inString.substring(i,i+1).equals("'") && pairs==1)
+				pairs--;
+			else if (inString.substring(i,i+1).equals(",") && pairs==0){
+				arr[arr_index]=inString.substring(str_index+2,i);
+				str_index=i;
+				arr_index++;
+			}
+		}
+		arr[arr_index] = inString.substring(str_index+2,inString.length());
+
+		split = arr[2].split(", ");
+
+		// trim everything (I'm lazy..) and cut of various irrelevant characters (like ' or ,) with substring.
+		this.type = arr[1].trim();
+		this.position = split[0].trim().substring(1);
+		this.start = Integer.valueOf(split[1].trim());
+		this.end = Integer.valueOf(split[2].substring(0,split[2].length()-1).trim());
+		this.content = arr[3].trim().substring(1,arr[3].trim().length()-1);
+		this.description = arr[4].trim().substring(1,arr[4].trim().length()-2);
 	}
 
 	// OUT: A String which reads exactly like the error in swipl
