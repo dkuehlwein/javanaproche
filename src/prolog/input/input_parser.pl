@@ -67,6 +67,7 @@ input_dcg(Out,InIndex,OutIndex) -->
 	['%'],
 	any_char(InIndex,NewInIndex),
 	['#'],
+	!,
 	input_dcg(Out,NewInIndex,OutIndex).
 
 
