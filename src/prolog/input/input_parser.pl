@@ -75,8 +75,9 @@ input_dcg(Out,InIndex,OutIndex) -->
 	{Char='#';
 	 char_type(Char, newline)
 	},
+	{NewInIndex1 is NewInIndex +2},
 	!,
-	input_dcg(Out,NewInIndex,OutIndex).
+	input_dcg(Out,NewInIndex1,OutIndex).
 
 % special case: double-linebreak (new paragraph)
 input_dcg([sentence(Index,InIndex,NewInIndex,Wordlist,Content)|Out],InIndex,OutIndex) -->
