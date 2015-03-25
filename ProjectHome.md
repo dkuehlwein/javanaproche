@@ -1,0 +1,1 @@
+Naproche aims to check mathematical texts written in a controlled natural language for correctness. This is a Java implementation of the Naproche algorithm.
